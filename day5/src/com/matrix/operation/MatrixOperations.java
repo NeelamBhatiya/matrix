@@ -1,11 +1,10 @@
 package com.matrix.operation;
 
 
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-
 import com.matrix.operation.exception.InvalidInputMatrixException;
 
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 
 public class MatrixOperations {
@@ -21,8 +20,7 @@ public class MatrixOperations {
 	}
 
 	
-	static void add(int matrix1[][],int matrix2[][]) throws InvalidInputMatrixException
-	{
+	static void add(int matrix1[][],int matrix2[][]){
 		
 		int rows = matrix1.length;
 		int cols = matrix1[0].length;
@@ -30,59 +28,49 @@ public class MatrixOperations {
 		int cols2 = matrix2[0].length;
 		int sum[][]=new int[rows][cols];
 		try {
-			if(rows!=rows2 && cols != cols2)
-			{
-				throw new Exception("The dimensions of Matrix 1 Matrix 2 must be equal ");
+			if (rows != rows2 && cols != cols2) {
+				throw new InvalidInputMatrixException("The dimensions of Matrix 1 Matrix 2 must be equal ");
 			}
-			
-		for(int i=0;i<rows;i++)
-		{
-			for(int j=0;j<cols;j++) 
-			{
-				sum[i][j]=matrix1[i][j]+matrix2[i][j];	
-			}	
-		}
-		print(sum);
-		}
-		catch(ArrayIndexOutOfBoundsException e) {
-			//logger.info("The specified index doesnt exist  "+e.getMessage());  
-			
-			InvalidInputMatrixException nex= new InvalidInputMatrixException();		
-			nex.initCause(e.getCause()); 
-			throw nex;
-			
-		}
-		catch (Exception e) {
-			//logger.info("There is an Invalid input  "+e.getMessage()); 			
-			
-			InvalidInputMatrixException nex= new InvalidInputMatrixException();		
-			nex.initCause(e.getCause()); 
-			throw nex;
-		}
-		finally {
-			
-			System.out.println("Done!");
-		}
-		
-		
 
+			for (int i = 0; i < rows; i++) {
+				for (int j = 0; j < cols; j++) {
+					sum[i][j] = matrix1[i][j] + matrix2[i][j];
+				}
+			}
+			print(sum);
+		} catch (Exception e) {
+			//logger.info("There is an Invalid input  "+e.getMessage());
+			System.out.println(e.getMessage());
+		} finally {
+			System.out.println("Addition Operation Ended");
+		}
 	}
-	static void subtract(int matrix1[][],int matrix2[][]) throws InvalidInputMatrixException {
+	static void subtract(int matrix1[][],int matrix2[][]){
 		int rows = matrix1.length;
 		int cols = matrix1[0].length;
-		int sub[][]=new int[rows][cols];
-		for(int i=0;i<rows;i++)
-		{
-			for(int j=0;j<cols;j++) 
-			{
-				sub[i][j]=matrix1[i][j]-matrix2[i][j];	
-			}	
+		int rows2 = matrix2.length;
+		int cols2 = matrix2[0].length;
+		try {
+			if (rows != rows2 && cols != cols2) {
+				throw new InvalidInputMatrixException("The dimensions of Matrix 1 Matrix 2 must be equal ");
+			}
+
+			for (int i = 0; i < rows; i++) {
+				for (int j = 0; j < cols; j++) {
+					matrix1[i][j]-= +matrix2[i][j];
+				}
+			}
+			print(matrix1);
+		} catch (Exception e) {
+			//logger.info("There is an Invalid input  "+e.getMessage());
+			System.out.println(e.getMessage());
+		} finally {
+			System.out.println("Subtraction Operation Ended");
 		}
-		print(sub);
 	
 	}
 	
-	static void transpose(int matrix[][])  throws InvalidInputMatrixException{
+	static void transpose(int matrix[][]){
 		int rows = matrix.length;
 		int cols = matrix[0].length;
 		int transpose[][]=new int[cols][rows];
@@ -90,31 +78,31 @@ public class MatrixOperations {
 		{
 			for(int j=0;j<cols;j++) 
 			{
-				transpose[j][i]=matrix[i][j];	
+				transpose[j][i]=matrix[i][j];
 			}	
 		}
 		print(transpose);
 	}	
-	static void multiply(int matrix1[][],int matrix2[][]) throws InvalidInputMatrixException {
+	static void multiply(int matrix1[][],int matrix2[][]) {
 		/* for multiplication  the number of columns in matrix1 should be 
 		 * equal to the number of rows in matrix2
 		 */
-		int row1=matrix1.length;
-		int col1=2;//matrix1[0].length;
-		int row2 = 	matrix2.length;
-		int col1_row2=matrix1[0].length;
-		int col2=matrix2[0].length;
+		int row1 = matrix1.length;
+		int row2 = matrix2.length;
+		int commonDimension = matrix1[0].length;
+		int col2 = matrix2[0].length;
 		int multiplicationResult[][]=new int[row1][col2];
-		
 
 		try {
-			if(col1!=row2)
+			if(commonDimension!=row2)
 				{
-				throw new Exception("The No. of column in Matrix 1 and No. of Row in Matrix 2 must be equal ");
+					throw new InvalidInputMatrixException(
+							"The number of cols in  Matrix 1 must be equal to number of rows in Matrix 2 ");
 				}
+
 			for(int i=0;i<row1;i++) {
 				for(int j=0;j<col2;j++) {
-					for(int k=0;k<col1_row2;k++) {
+					for(int k=0;k<commonDimension;k++) {
 						multiplicationResult[i][j] += matrix1[i][k]*matrix2[k][j];
 					}
 				}
@@ -122,18 +110,13 @@ public class MatrixOperations {
 			print(multiplicationResult);
 		}
 		catch (Exception e) {
-			//logger.info("There is an Invalid input  "+e.getMessage());  
-			InvalidInputMatrixException nex= new InvalidInputMatrixException();		
-			nex.initCause(e.getCause()); 
-			throw nex;
-		}
-		finally {
-			
-			System.out.println("Done!");
+			System.out.println(e.getMessage());
+		} finally {
+			System.out.println("Multiplication Operation Ended ");
 		}
 		
 	}
-  static public void print(int matrix[][]) throws InvalidInputMatrixException{
+  static public void print(int matrix[][]){
 		
 		int rows = matrix.length;
 		int cols = matrix[0].length;
@@ -149,7 +132,7 @@ public class MatrixOperations {
 		
 		
 	}
-	public static void main(String[] args) throws InvalidInputMatrixException {
+	public static void main(String[] args){
 		// TODO Auto-generated method stub
 		int rows1=2,cols1=3, rows3=3, cols3=4;
 		int matrix1[][]=  { {10,2,7}, {5,6,9} }; //rows=2, columns=3
