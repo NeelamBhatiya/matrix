@@ -1,29 +1,17 @@
 package com.psl.contact;
 
-import com.psl.contact.exception.EmailNotUniqueException;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import com.psl.contact.exception.InvalidInformationException;
-import com.psl.training.exception.InvalidParameterRangeException;
 
-class Address{
-	String area;
-	String city;
-	String pincode;
-	String state;
-	
-	String country;
-	
-	Address(String area,String city,String pincode,	String state,String country){
-		this.area=area;
-		this.city=city;
-		this.country=country;
-		this.pincode=pincode;
-		this.state=state;
-		
-	}
-	
-}
+
+
 
 public class Contact {
+	
+
 	String firstName;
 	String middleName;
 	String lastName;
@@ -35,7 +23,7 @@ public class Contact {
 	 String mobileNumber;
 	 String email;
 	 String website;
-	 Contact(String firstName,	String middleName,	String lastName,		String dateOfBirth,
+	 public Contact(String firstName,	String middleName,	String lastName,		String dateOfBirth,
 		 String gender,	 String anniversary, 		 Address address,		 String telephoneNumber,
 		 String mobileNumber,	 String email,		 String website)
 	 {
@@ -53,65 +41,128 @@ public class Contact {
 		 
 		 
 	 }
+	 static Logger logger =Logger.getLogger(Contact.class.getName());
+		static {
+			try {
+				logger.addHandler(new FileHandler("myLog"));
+			} catch (SecurityException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	 public String getFirstName() {
 		 return this.firstName;
 	 }
 	 public String getLastName() {
 		 return this.lastName;
 	 }
-	 public void validateEmail(String email) throws EmailNotUniqueException {
-	        if (Contact.contains(email)) {
-	            throw new EmailNotUniqueException("Email Already Registered");
-	        }
-	    }
+	 String  getDOB() 
+	 {
+			
+			return this.dateOfBirth;
+		}
+		String getEmail() {
+		return this.email;
+	}
 	 
-	 
-	public void validate() throws InvalidInformationException
+	public void  validate() throws InvalidInformationException
 	 {
 		try {
-			if(this.getFirstName()==null ||this.getLastName()==null  )
+			if(this.getFirstName()==null ||this.getLastName()==null || this.getDOB()==null || this.getEmail()==null )
 			{
-				throw new Exception("Some  ");
+				
+				throw new InvalidInformationException("Dob err");	
 			}
 			
 			
+			
 		}catch(Exception e) {
-			InvalidInformationException nex= new InvalidInformationException();			//LOGGING
-	
-			nex.initCause(e.getCause()); //tell what is the reason of exception
-				throw nex;
+			System.out.println(e.getMessage());
+			
 		}
+		System.out.println(this.getDOB());
+		try {
+			if(Contact.isValid(this.getEmail()) !=true)
+			{
+				throw new InvalidInformationException("Invalid email");	
+			}
 		
-//		
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("email should be like abc@gmail.com");
+
+		}finally {
+			System.out.println("email");
+		
+		}
 //		try {
-//			if(y==0)
-//				throw new Exception("Some  ");
-//			result = x/y;
-//		}catch (Exception e) {
-//			logger.info("There is an ex  "+e.getMessage());  //logging on console
-//			//throw e; //rethroewing ex for further communication 
-//			InvalidParameterRangeException nex= new InvalidParameterRangeException();			//LOGGING
+//			if(this.getMobileN()==null ||this.getLastName()==null || this.getDOB()==null || this.getEmail()==null )
+//			{
+//				
+//				throw new InvalidInformationException("Dob err");	
+//			}
 //			
-//			nex.initCause(e.getCause()); //tell what is the reason of exception
-//			throw nex;
-//			//System.out.println("ohh some err");
-//			//e.printStackTrace();
-//		}		
+//			
+//			
+//		}catch(Exception e) {
+//			System.out.println(e.getMessage());
+//			
+//		}
+		System.out.println(this.getDOB());
 		
-//		 try {
-//	            service.validateEmail("abc@gmail.com");
-//	        } catch (EmailNotUniqueException e) {
-//	            // logging and handling the situation
-//	        }
+	
+	
 	 }
+
 	 
 
-	public static void main(String[] args) {
+//	 boolean isValid(String email) {
+//		      String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+//		      return email.matches(regex);
+//		   }
+	 public static boolean isValid(String email) 
+	    { 
+	        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ 
+	                            "[a-zA-Z0-9_+&*-]+)*@" + 
+	                            "(?:[a-zA-Z0-9-]+\\.)+[a-z" + 
+	                            "A-Z]{2,7}$"; 
+	                              
+	        Pattern pat = Pattern.compile(emailRegex); 
+	        if (email == null) 
+	            return false; 
+	        return pat.matcher(email).matches(); 
+	    } 
+	
+
+	public static void main(String[] args) throws InvalidInformationException {
 		// TODO Auto-generated method stub
-		Contact c = new Contact(Neelam, , Bhatiya, anniversary, anniversary, anniversary, address, anniversary, anniversary, anniversary, anniversary);
-		c.validate();
+		
         
 
 	}
 
 }
+
+
+//	
+//	try {
+//		if(y==0)
+//			throw new Exception("Some  ");
+//		result = x/y;
+//	}catch (Exception e) {
+//		logger.info("There is an ex  "+e.getMessage());  //logging on console
+//		//throw e; //rethroewing ex for further communication 
+//		InvalidParameterRangeException nex= new InvalidParameterRangeException();			//LOGGING
+//		
+//		nex.initCause(e.getCause()); //tell what is the reason of exception
+//		throw nex;
+//		//System.out.println("ohh some err");
+//		//e.printStackTrace();
+//	}		
+	
+//	 try {
+//            service.validateEmail("abc@gmail.com");
+//        } catch (EmailNotUniqueException e) {
+//            // logging and handling the situation
+//        }
